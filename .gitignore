@@ -1,0 +1,42 @@
+# Ignore Visual Studio files
+.vs/
+*.user
+*.suo
+*.vcxproj.user
+*.csproj.user
+
+# Ignore build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.rhp
+*.gha
+
+# Ignore package files
+packages/
+*.nupkg
+*.snupkg
+
+# Ignore logs and temp files
+*.log
+*.tmp
+*.bak
+
+# Ignore Rider IDE files
+.idea/
+*.iml
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore settings files
+*.config
+*.prefs
+
+# Ignore Git files
+.git/
+.gitignore
