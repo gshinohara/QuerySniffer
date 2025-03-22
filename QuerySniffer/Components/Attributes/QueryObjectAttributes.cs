@@ -12,7 +12,7 @@ namespace QuerySniffer.Components.Attributes
 
         public override bool HasInputGrip => false;
 
-        private PointF CustomInputGrip => Pivot + new SizeF(Bounds.Width * -0.2f, Bounds.Height / 2);
+        public PointF CustomInputGrip => new PointF(Bounds.Left + 10, Bounds.Bottom);
 
         protected override void Render(GH_Canvas canvas, Graphics graphics, GH_CanvasChannel channel)
         {
