@@ -1,11 +1,12 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using QuerySniffer.Components.Attributes;
+using QuerySniffer.Types;
 using System;
 
 namespace QuerySniffer.Components
 {
-    public class QueryObject : GH_Param<IGH_Goo>
+    public class QueryObject : GH_Param<GrasshopperObject>
     {
         public QueryObject() : base("Query Object", "QO", "Query Object", "Params", "Util", GH_ParamAccess.item)
         {
