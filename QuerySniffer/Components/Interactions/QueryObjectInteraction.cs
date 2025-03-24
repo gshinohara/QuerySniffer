@@ -97,20 +97,19 @@ namespace QuerySniffer.Components.Interactions
             switch (m_WireState)
             {
                 case WireState.New:
-                    m_QueryObject.VolatileData.Clear();
-                    m_QueryObject.AddVolatileData(new GH_Path(0), m_QueryObject.VolatileData.DataCount, new GrasshopperObject(m_DocumentObject));
+                    m_QueryObject.ConnectedObjects.Clear();
+                    m_QueryObject.ConnectedObjects.Add(new GrasshopperObject(m_DocumentObject));
                     break;
                 case WireState.Add:
-                    m_QueryObject.AddVolatileData(new GH_Path(0), m_QueryObject.VolatileData.DataCount, new GrasshopperObject(m_DocumentObject));
+                    m_QueryObject.ConnectedObjects.Add(new GrasshopperObject(m_DocumentObject));
                     break;
                 case WireState.Remove:
                     var item = m_QueryObject.VolatileData.AllData(true).FirstOrDefault(obj => (obj as GrasshopperObject).Value == m_DocumentObject);
-                    m_QueryObject.VolatileData.get_Branch(0).Remove(item);
+                    m_QueryObject.ConnectedObjects.Remove(item as GrasshopperObject);
                     break;
             }
 
-            foreach (var param in m_QueryObject.Recipients)
-                param.ExpireSolution(true);
+            m_QueryObject.ExpireSolution(true);
 
             Canvas.ActiveInteraction = null;
             return base.RespondToMouseUp(sender, e);
