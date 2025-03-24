@@ -10,6 +10,7 @@ namespace QuerySniffer.Components
     {
         public QueryObject() : base("Query Object", "QO", "Query Object", "Params", "Util", GH_ParamAccess.item)
         {
+            Optional = true;
         }
 
         public override Guid ComponentGuid => new Guid("ECE7231E-02C9-4352-AA18-86B193F92361");
