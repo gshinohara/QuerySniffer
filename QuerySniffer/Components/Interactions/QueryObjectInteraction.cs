@@ -89,6 +89,12 @@ namespace QuerySniffer.Components.Interactions
 
         public override GH_ObjectResponse RespondToMouseUp(GH_Canvas sender, GH_CanvasMouseEvent e)
         {
+            if (m_DocumentObject == null)
+            {
+                Canvas.ActiveInteraction = null;
+                return base.RespondToMouseUp(sender, e);
+            }
+
             switch (m_WireState)
             {
                 case WireState.New:
