@@ -1,5 +1,6 @@
 ﻿using Grasshopper.GUI.Canvas;
 using Grasshopper.Kernel.Attributes;
+using QuerySniffer.Types;
 using System.Drawing;
 
 namespace QuerySniffer.Components.Attributes
@@ -18,6 +19,20 @@ namespace QuerySniffer.Components.Attributes
         {
             switch (channel)
             {
+                case GH_CanvasChannel.Wires:
+                    foreach (var obj in (Owner as QueryObject).VolatileData.AllData(true))
+                    {
+                        if (obj is GrasshopperObject gh_obj)
+                        {
+                            using (Pen pen = new Pen(Color.Orange, 5))
+                            {
+                                PointF startPt = CustomInputGrip;
+                                PointF endPt = gh_obj.Value.Attributes.Bounds.Location;
+                                canvas.Graphics.DrawLine(pen, startPt, endPt);
+                            }
+                        }
+                    }
+                    break;
                 case GH_CanvasChannel.Objects:
                     GH_Capsule capsule = IsIconMode(Owner.IconDisplayMode) ?
                         GH_Capsule.CreateCapsule(Bounds, GH_CapsuleRenderEngine.GetImpliedPalette(Owner)) :
