@@ -8,7 +8,7 @@ namespace QuerySniffer.Components
 {
     public class QueryObject : GH_Param<GrasshopperObject>
     {
-        public QueryObject() : base("Query Object", "QO", "Query Object", "Params", "Util", GH_ParamAccess.item)
+        public QueryObject() : base("Query Object", "QO", "Query Object", "QuerySniffer", "Pick", GH_ParamAccess.item)
         {
             Optional = true;
         }
