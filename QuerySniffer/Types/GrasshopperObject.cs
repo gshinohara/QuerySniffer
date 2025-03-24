@@ -30,5 +30,16 @@ namespace QuerySniffer.Types
         {
             return new GrasshopperObject(Value);
         }
+
+        public override bool CastTo<Q>(ref Q target)
+        {
+            if(Value is Q)
+            {
+                target = (Q)Value;
+                return true;
+            }
+
+            return false;
+        }
     }
 }
