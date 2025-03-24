@@ -8,6 +8,7 @@ using QuerySniffer.Types;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using QuerySniffer;
 
 namespace QuerySniffer.Components.Interactions
 {
@@ -42,12 +43,10 @@ namespace QuerySniffer.Components.Interactions
         {
             if (m_CanvasMouseLocation.IsEmpty)
                 return;
-            using (Pen pen = new Pen(Color.Orange, 5))
-            {
-                PointF startPt = (m_QueryObject.Attributes as QueryObjectAttributes).CustomInputGrip;
-                PointF endPt = m_CanvasMouseLocation;
-                sender.Graphics.DrawLine(pen, startPt, endPt);
-            }
+
+            PointF startPt = (m_QueryObject.Attributes as QueryObjectAttributes).CustomInputGrip;
+            PointF endPt = m_CanvasMouseLocation;
+            sender.Graphics.DrawQueryWire(startPt, endPt, QuerySnifferUtility.QueryWireColor);
         }
 
         public override GH_ObjectResponse RespondToMouseMove(GH_Canvas sender, GH_CanvasMouseEvent e)

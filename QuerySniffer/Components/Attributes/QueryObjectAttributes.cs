@@ -28,7 +28,7 @@ namespace QuerySniffer.Components.Attributes
                             {
                                 PointF startPt = CustomInputGrip;
                                 PointF endPt = gh_obj.Value.Attributes.Bounds.Location;
-                                canvas.Graphics.DrawLine(pen, startPt, endPt);
+                                canvas.Graphics.DrawQueryWire(startPt, endPt, QuerySnifferUtility.QueryWireColor);
                             }
                         }
                     }
