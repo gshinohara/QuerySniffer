@@ -1,5 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using QuerySniffer.Analysis.DAG;
 using System;
 
 namespace QuerySniffer.Types
@@ -31,9 +32,24 @@ namespace QuerySniffer.Types
             return new GrasshopperObject(Value);
         }
 
+        public override bool CastFrom(object source)
+        {
+            switch (source)
+            {
+                case ParameterNode pn:
+                    Value = pn.Value;
+                    return true;
+                case ComponentNode cn:
+                    Value = cn.Value;
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public override bool CastTo<Q>(ref Q target)
         {
-            if(Value is Q)
+            if (Value is Q)
             {
                 target = (Q)Value;
                 return true;
