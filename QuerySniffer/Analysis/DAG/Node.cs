@@ -7,6 +7,8 @@ namespace QuerySniffer.Analysis.DAG
     {
         public T Value { get; }
 
+        public int? Depth { get; set; } = null;
+
         public Node(T value)
         {
             Value = value;
@@ -30,6 +32,8 @@ namespace QuerySniffer.Analysis.DAG
 
     public interface INode
     {
+        int? Depth { get; set; }
+
         IEnumerable<INode> GetRightNodes();
 
         IEnumerable<INode> GetLeftNodes();

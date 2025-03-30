@@ -1,5 +1,5 @@
-﻿using Grasshopper.Kernel.Attributes;
-using Grasshopper.Kernel;
+﻿using Grasshopper.Kernel;
+using Grasshopper.Kernel.Attributes;
 using QuerySniffer.Analysis.DAG;
 
 public static class Utility

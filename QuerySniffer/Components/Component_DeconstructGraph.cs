@@ -1,19 +1,20 @@
 ﻿using Grasshopper.Kernel;
 using QuerySniffer.Analysis.DAG;
+using QuerySniffer.Parameters;
 using QuerySniffer.Types;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace QuerySniffer.Components
 {
-    public class Component_CausalRelationship : GH_Component
+    public class Component_DeconstructGraph : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the Component_CausalRelationship class.
+        /// Initializes a new instance of the Component_DeconstructGraph class.
         /// </summary>
-        public Component_CausalRelationship()
-          : base("Causal Relationship", "Causal",
-              "Analyse the grasshopper algorythm in the DAG theoty.",
+        public Component_DeconstructGraph()
+          : base("Deconstruct Graph", "Decon",
+              "Deconstruct a graph to get nodes and their depth.",
               "QuerySniffer", "Analysis")
         {
         }
@@ -23,7 +24,7 @@ namespace QuerySniffer.Components
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Object", "O", "Object of the start point on DAG", GH_ParamAccess.item);
+            pManager.AddParameter(new Param_Graph(), "Graph", "G", "Graph to be deconstructed", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -31,8 +32,8 @@ namespace QuerySniffer.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Left", "L", "Object following in the left direction", GH_ParamAccess.list);
-            pManager.AddGenericParameter("Right", "R", "Object following in the right direction", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Nodes", "N", "Nodes in graph", GH_ParamAccess.list);
+            pManager.AddIntegerParameter("Depths", "D", "Depths of nodes", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -41,28 +42,18 @@ namespace QuerySniffer.Components
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            IGH_DocumentObject obj = null;
-            if (!DA.GetData("Object", ref obj)) return;
+            Graph graph = null;
+            if (!DA.GetData("Graph", ref graph)) return;
 
-            List<GrasshopperObject> lefts = new List<GrasshopperObject>();
-            List<GrasshopperObject> rights = new List<GrasshopperObject>();
-
-            foreach (INode node in NodeExplorer.GetAllLeftNodes(obj.GetTopLevelNode()))
+            Func<INode, GrasshopperObject> cast = node =>
             {
                 GrasshopperObject grasshopperObject = new GrasshopperObject();
                 grasshopperObject.CastFrom(node);
-                lefts.Add(grasshopperObject);
-            }
+                return grasshopperObject;
+            };
 
-            foreach (INode node in NodeExplorer.GetAllRightNodes(obj.GetTopLevelNode()))
-            {
-                GrasshopperObject grasshopperObject = new GrasshopperObject();
-                grasshopperObject.CastFrom(node);
-                rights.Add(grasshopperObject);
-            }
-
-            DA.SetDataList("Left", lefts);
-            DA.SetDataList("Right", rights);
+            DA.SetDataList("Nodes", graph.Nodes.Select(node => cast(node)));
+            DA.SetDataList("Depths", graph.Nodes.Select(node => node.Depth));
         }
 
         /// <summary>
@@ -83,7 +74,7 @@ namespace QuerySniffer.Components
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("CDE0FFD9-D27B-499C-B79C-4BDE9CBC50A5"); }
+            get { return new Guid("CE8A756D-6254-4D8C-853A-34DD756544C1"); }
         }
     }
 }
