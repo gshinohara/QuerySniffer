@@ -32,6 +32,31 @@ namespace QuerySniffer.Analysis.DAG
             return graph;
         }
 
+        public static Graph Create(IGH_DocumentObject start)
+        {
+            INode startNode = start.GetTopLevelNode();
+
+            Graph left = new Graph();
+            left.SearchNodes(start.GetTopLevelNode(), Direction.Left);
+
+            Graph right = new Graph();
+            right.SearchNodes(start.GetTopLevelNode(), Direction.Right);
+
+            Graph graph = new Graph();
+            graph.m_Nodes.AddRange(left.Nodes);
+            graph.m_Nodes.AddRange(right.Nodes);
+            graph.m_Nodes.Add(startNode);
+
+            foreach (INode node in left.m_Nodes)
+                node.Depth = -node.Depth;
+
+            startNode.Depth = 0;
+
+            graph.m_Nodes.Sort((a, b) => (int)(a.Depth - b.Depth));
+
+            return graph;
+        }
+
         private void SearchNodes(INode start, Direction direction = Direction.Left)
         {
             start.Depth = 0;

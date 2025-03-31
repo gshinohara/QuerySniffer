@@ -42,7 +42,7 @@ namespace QuerySniffer.Components
             IGH_DocumentObject documentObject = null;
             if (!DA.GetData("Object", ref documentObject)) return;
 
-            Graph graph = Graph.CreateInLeft(documentObject);
+            Graph graph = Graph.Create(documentObject);
             DA.SetData("Graph", graph);
         }
 
