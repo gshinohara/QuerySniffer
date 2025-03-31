@@ -4,7 +4,7 @@ using QuerySniffer.Analysis.DAG;
 
 public static class Utility
 {
-    private static IGH_DocumentObject GetTopLevel(IGH_DocumentObject obj)
+    private static IGH_DocumentObject GetTopLevel(this IGH_DocumentObject obj)
     {
         switch (obj.Attributes)
         {
@@ -26,7 +26,7 @@ public static class Utility
         }
     }
 
-    private static INode GetNode(IGH_DocumentObject obj)
+    private static INode GetNode(this IGH_DocumentObject obj)
     {
         switch (obj)
         {
@@ -41,6 +41,6 @@ public static class Utility
 
     public static INode GetTopLevelNode(this IGH_DocumentObject obj)
     {
-        return GetNode(GetTopLevel(obj));
+        return obj.GetTopLevel().GetNode();
     }
 }
