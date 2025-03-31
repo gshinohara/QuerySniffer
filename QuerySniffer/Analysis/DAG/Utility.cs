@@ -13,6 +13,15 @@ public static class Utility
             case GH_FloatingParamAttributes floatingParamAtt:
                 return obj;
             default:
+                break;
+        }
+
+        switch (obj)
+        {
+            case IGH_Param _:
+            case GH_Component _:
+                return obj;
+            default:
                 throw new System.NotImplementedException();
         }
     }
