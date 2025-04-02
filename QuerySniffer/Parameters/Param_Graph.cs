@@ -21,6 +21,8 @@ namespace QuerySniffer.Parameters
             return GH_GetterResult.cancel;
         }
 
+        public override GH_Exposure Exposure => GH_Exposure.hidden; 
+
         public override Guid ComponentGuid => new Guid("E506F05D-0701-4E3C-A266-727D602ABF3C");
     }
 }
