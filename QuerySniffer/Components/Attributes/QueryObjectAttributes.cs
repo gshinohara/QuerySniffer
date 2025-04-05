@@ -1,11 +1,12 @@
 ﻿using Grasshopper.GUI.Canvas;
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Attributes;
-using QuerySniffer.Types;
+using System;
 using System.Drawing;
 
 namespace QuerySniffer.Components.Attributes
 {
-    internal class QueryObjectAttributes : GH_FloatingParamAttributes
+    internal class QueryObjectAttributes : GH_ComponentAttributes
     {
         public QueryObjectAttributes(QueryObject owner) : base(owner)
         {
@@ -20,14 +21,14 @@ namespace QuerySniffer.Components.Attributes
             switch (channel)
             {
                 case GH_CanvasChannel.Wires:
-                    foreach (var obj in (Owner as QueryObject).VolatileData.AllData(true))
+                    foreach (Guid id in (Owner as QueryObject).ConnectedObjects)
                     {
-                        if (obj is GrasshopperObject gh_obj)
+                        if (Owner.OnPingDocument().FindObject(id, true) is IGH_DocumentObject obj)
                         {
                             using (Pen pen = new Pen(Color.Orange, 5))
                             {
                                 PointF startPt = CustomInputGrip;
-                                PointF endPt = gh_obj.Value.Attributes.Bounds.Location;
+                                PointF endPt = obj.Attributes.Bounds.Location;
                                 canvas.Graphics.DrawQueryWire(startPt, endPt, QuerySnifferUtility.QueryWireColor);
                             }
                         }

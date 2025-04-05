@@ -2,13 +2,11 @@
 using Grasshopper.GUI.Canvas;
 using Grasshopper.GUI.Canvas.Interaction;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
 using QuerySniffer.Components.Attributes;
-using QuerySniffer.Types;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using QuerySniffer;
 
 namespace QuerySniffer.Components.Interactions
 {
@@ -98,14 +96,14 @@ namespace QuerySniffer.Components.Interactions
             {
                 case WireState.New:
                     m_QueryObject.ConnectedObjects.Clear();
-                    m_QueryObject.ConnectedObjects.Add(new GrasshopperObject(m_DocumentObject));
+                    m_QueryObject.ConnectedObjects.Add(m_DocumentObject.InstanceGuid);
                     break;
                 case WireState.Add:
-                    m_QueryObject.ConnectedObjects.Add(new GrasshopperObject(m_DocumentObject));
+                    m_QueryObject.ConnectedObjects.Add(m_DocumentObject.InstanceGuid);
                     break;
                 case WireState.Remove:
-                    var item = m_QueryObject.VolatileData.AllData(true).FirstOrDefault(obj => (obj as GrasshopperObject).Value == m_DocumentObject);
-                    m_QueryObject.ConnectedObjects.Remove(item as GrasshopperObject);
+                    Guid connected_id = m_QueryObject.ConnectedObjects.FirstOrDefault(id => id == m_DocumentObject.InstanceGuid);
+                    m_QueryObject.ConnectedObjects.Remove(connected_id);
                     break;
             }
 
