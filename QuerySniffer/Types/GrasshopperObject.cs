@@ -19,11 +19,14 @@ namespace QuerySniffer.Types
 
         public override string TypeDescription => "Grasshopper Object";
 
-        public override bool IsValid => true;
+        public override bool IsValid => Value != null;
 
         public override string ToString()
         {
-            return (Activator.CreateInstance(Value.GetType()) as IGH_DocumentObject).Name;
+            if (Activator.CreateInstance(Value.GetType()) is IGH_DocumentObject obj)
+                return $"{obj.Name} ({obj.Category})";
+            else
+                return "Invalid Object";
         }
 
         public override IGH_Goo Duplicate()
