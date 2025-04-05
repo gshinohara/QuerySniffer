@@ -36,6 +36,7 @@ namespace QuerySniffer.Components
             base.AddedToDocument(document);
 
             document.ObjectsAdded += Document_ObjectsAdded;
+            document.ObjectsDeleted += Document_ObjectsDeleted;
 
             foreach (var obj in document.Objects)
                 obj.ObjectChanged += OnObjectChanged;
@@ -46,6 +47,7 @@ namespace QuerySniffer.Components
             base.RemovedFromDocument(document);
 
             document.ObjectsAdded -= Document_ObjectsAdded;
+            document.ObjectsDeleted -= Document_ObjectsDeleted;
 
             foreach (var obj in document.Objects)
                 obj.ObjectChanged -= OnObjectChanged;
@@ -55,6 +57,16 @@ namespace QuerySniffer.Components
         {
             foreach (var obj in e.Objects)
                 obj.ObjectChanged += OnObjectChanged;
+        }
+
+        private void Document_ObjectsDeleted(object sender, GH_DocObjectEventArgs e)
+        {
+            if (e.Objects.Any(obj => ConnectedObjects.Contains(obj.InstanceGuid)))
+            {
+                foreach (var obj in e.Objects)
+                    ConnectedObjects.Remove(obj.InstanceGuid);
+                ExpireSolution(true);
+            }
         }
 
         private void OnObjectChanged(IGH_DocumentObject sender, GH_ObjectChangedEventArgs e)
