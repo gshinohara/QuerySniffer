@@ -25,13 +25,6 @@ namespace QuerySniffer.Analysis.DAG
         {
         }
 
-        public static Graph CreateInLeft(IGH_DocumentObject start)
-        {
-            Graph graph = new Graph();
-            graph.SearchNodes(start.GetTopLevelNode(), Direction.Left);
-            return graph;
-        }
-
         public static Graph Create(IGH_DocumentObject start)
         {
             INode startNode = start.GetTopLevelNode();
@@ -44,11 +37,10 @@ namespace QuerySniffer.Analysis.DAG
 
             Graph graph = new Graph();
             graph.m_Nodes.AddRange(left.Nodes);
+            graph.m_Edges.AddRange(left.Edges);
             graph.m_Nodes.AddRange(right.Nodes);
+            graph.m_Edges.AddRange(right.Edges);
             graph.m_Nodes.Add(startNode);
-
-            foreach (INode node in left.m_Nodes)
-                node.Depth = -node.Depth;
 
             startNode.Depth = 0;
 
@@ -85,21 +77,38 @@ namespace QuerySniffer.Analysis.DAG
 
                 foreach (INode neighbor in neighbors)
                 {
+                    INode currentNeighbor;
                     if (visited.Add(neighbor))
+                    {
                         stack.Push(neighbor);
-                    m_Edges.Add(new Edge(current, neighbor));
+                        currentNeighbor = neighbor;
+                    }
+                    else
+                    {
+                        currentNeighbor = visited.FirstOrDefault(n => n.Equals(neighbor));
+                    }
 
-                    var connectedSources = m_Edges
-                        .Where(e => e.EndNode == neighbor)
-                        .Select(e => e.StartNode.Depth);
+                    m_Edges.Add(new Edge(current, currentNeighbor));
 
-                    int? maxDepth = connectedSources.Any() ? connectedSources.Max() : current.Depth;
-                    int neighborDepth = (neighbor.Depth == null) ? (int)maxDepth + 1 : Math.Max((int)neighbor.Depth, (int)maxDepth + 1);
-                    neighbor.Depth = neighborDepth;
+                    var neighborSiblings = m_Edges
+                        .Where(e => e.EndNode.Equals(currentNeighbor))
+                        .Select(e => e.StartNode);
+
+                    int? maxDepth = neighborSiblings.Max(n => n.Depth);
+                    int neighborDepth = (currentNeighbor.Depth == null) ? (int)maxDepth + 1 : Math.Max((int)currentNeighbor.Depth, (int)maxDepth + 1);
+                    currentNeighbor.Depth = neighborDepth;
                 }
             }
 
             m_Nodes.AddRange(visited);
+
+            if (direction == Direction.Left)
+            {
+                foreach (INode node in m_Nodes)
+                    node.Depth *= -1;
+                foreach (Edge edge in m_Edges)
+                    edge.Reverse();
+            }
         }
     }
 }
